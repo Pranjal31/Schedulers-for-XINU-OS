@@ -1,10 +1,10 @@
-Objective: To implement two new scheduling policies that avoid process starvation:
+**Objective:** To implement two new scheduling policies that avoid process starvation:
 	(1) Aging-based Scheduler
 	(2) Linux-like Scheduler
 
-Motivation: The default scheduler in Xinu will schedule the process with the higher priority. Starvation is observed in Xinu when there are two or more processes eligible for execution that have different priorities. The higher priority process gets to execute first which results in lower priority processes never getting any CPU time unless the higher priority process ends. 
+**Motivation:** The default scheduler in Xinu will schedule the process with the higher priority. Starvation is observed in Xinu when there are two or more processes eligible for execution that have different priorities. The higher priority process gets to execute first which results in lower priority processes never getting any CPU time unless the higher priority process ends. 
 
-Implementation:
+**Implementation:**
 
 (1) Aging-based Scheduler:
 The first scheduling policy is an Aging Based Scheduler. The basic idea of this scheduler is to gradually increase the priority of the processes waiting to be executed every time there's a need for scheduling. In this scheduler, priorities of the processes waiting to be executed is incremented by 1 every time there is a need for scheduling (i.e every time resched() is called). In the case of processes with equal priorities round robin would be used which is the default existing Xinu Policy.    
