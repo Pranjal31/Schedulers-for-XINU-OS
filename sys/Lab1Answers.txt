@@ -1,0 +1,72 @@
+1. What are the advantages and disadvantages of each of the two scheduling policies? Also, give the advantages and disadvantages of the round robin scheduling policy originally implemented in Xinu.
+
+Aging-based Scheduler
+---------------------
+
+Advantages:
+a) It solves the problem of starvation to some extent. The waiting processes keep accumulating priority credit, thereby increasing their dynamic priority. Eventually, even the lower priority processes will get a chance to run.
+
+b) Context switching is less frequent, so there is less overhead leading to a high CPU utilization.
+
+Disadvantages:
+a) It is not too fair. It increases the priority of ALL the waiting procceses by the same amount. Therefore, processes with high original priority but still waiting (because the priority is not the highest) will also accumulate dynamic priority credit, and will continue to dominate the lower priority processes for long periods.
+
+b) Response time is high. Till the time the second highest priority process gains enough credit to surpass the highest priority process, the highest priority process gets to run without intervention. If the difference in priorities of the two processes is high, the wait for the second best priority process to get its first chance to run will be very high. In general, if the difference in the priorities of the processes is high, there will be a lot of waiting to get the CPU resource to run on.
+
+c) It starves the IO-bound processes, because they are in WAIT queue for long periods (they are not in ready queue for enough time to be aging well)
+Linux-like Scheduler
+--------------------
+
+Advantages:
+a) This scheduler is fair. It rewards the processes for 'being good' (not using full quantum allotted to it) and punishes the processes for 'not being good' (using up the whole quantum).
+b) Lower priority processes don't starve. If they repeatedly don't get a chance to run, they'll soon gather enough credit (in the form of unused quantum) to eventually run.
+c) Response times are low (because context switching is frequent)
+
+Disadvantages:
+a) CPU utilization is low, as there is a lot of context switching leading to high overhead.
+b) Waiting times can be high for processes that have used up their quanta in a given epoch, because new epoch starts only when all other processes have used up their quanta.
+
+
+Priority-based Round-Robin Scheduler
+-----------------------------------
+
+Advantages:
+a. Compared to Non-preemptive scheduling techniques, response times are better for higher priority processes with Round-Robin Scheduler.
+b. Round-Robin Scheduler is fair to processes with equal priorities. All processes with the same priority get an equal share of the CPU.
+c. Wait times for high priority processes are generally low.
+d. It is very simple to implemnent.
+
+Disadvantages:
+a. It starves low priority processes. Low priority processes end up getting little to no CPU time for long periods.
+b. For the same priority, an interactive process doesn't get any preference over regular processes. Therefore, the response times for interactive processes might not be as low as desired.
+
+
+2. Describe the way each of the schedulers affects the NULL process.
+
+Aging-based Scheduler
+---------------------
+
+The null process starts with the lowest possible priority (0). It will get scheduled only when it has the highest dynamic priority among the processes in the ready queue. This can happen when:
+
+a) there are no other processes in the Ready Queue. Context switch will replace null process with a process that enters the ready queue.
+b) it has aged sufficiently to surpass other low priority processes (possibly because they were IO bound and spent a lot of time in the WAIT queue rather than the ready queue, thereby bypassing aging).
+
+Linux-Like Scheduler
+--------------------
+
+The null process runs only when there are no other processes in the ready queue
+
+Round-Robin Scheduler
+---------------------
+
+The null process starts with the lowest possible priority and therefore gets starved (rightly so; it is by design). It gets scheduled either  when there are no other processes in the ready queue or when there are other processes in the ready queue with the same priority(=0), in which case, it will get scheduled based on the Round-robin scheme.
+
+
+3. Give two suggestions how the above mentioned aging based scheduler could be changed to attain better fairness keeping the fundamental point of incrementing the priority to be the same in your new ideas
+
+a) Priority increments could be made inversely proportional to the dynamic priorities (priorities after aging). Thus, increment magnitude will be more for lower priority processes and less for higher priority processes. With time, every process will start getting a fair share of CPU time.
+
+b) We can increase the priorities for processes in the WAIT queue too, so that IO-bound processes are not starved.
+
+
+
