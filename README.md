@@ -11,6 +11,18 @@ The first scheduling policy is an Aging Based Scheduler. The basic idea of this 
 
 For example, assume that there are three processes eligible for execution P1(1), P2(2), and P3(3) with priorities as mentioned. So if P3(3) is running and  P1(1) and P2(2) are waiting to be executed. When resched is called we will have new priorities of processes waiting to be executed as follows: P1(1) -> P1(2) and P2(2) -> P2(3).
 
+```
+Initially P3(3) is running and P1(1) and P2(2) are waiting to be executed. 
+          
+	  Ready Queue            
+             after                                   
+          incrementing     Currently Running      Process Scheduled      New Ready Queue 
+	  
+1st Call: P1(2) P2(3)      P3(3) Running          P2(3) Scheduled        P1(2) P3(3)
+
+2nd Call: P1(3) P3(4)      P2(3) Running          P3(4) Scheduled        P1(3) P2(3)
+```
+
 *(2) Linux-like Scheduler:*
 This scheduling algorithm tries to loosely emulate the Linux scheduler in 2.2 kernel. With this algorithm, the CPU time is divided into epochs. In each epoch, every process has a specified time quantum, whose duration is computed at the beginning of the epoch. An epoch will end when all the runnable processes have used up their quantum. If a process has used up its quantum, it will not be scheduled until the next epoch starts, but a process can be selected many times during the epoch if it has not used up its quantum.
 
