@@ -1,4 +1,4 @@
-**Objective:** To implement two new scheduling policies that avoid process starvation:
+**Objective:** To implement two new scheduling policies that overcome the problem of process starvation:
 	(1) Aging-based Scheduler
 	(2) Linux-like Scheduler
 
